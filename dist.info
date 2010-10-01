@@ -1,0 +1,17 @@
+--- This file is part of LuaDist project
+
+name = "diluculum"
+version = "0.5.2"
+
+desc = "Diluculum is a library that intends to make the coexistence of C++ and Lua more harmonious."
+author = "Leandro Motta Barros"
+license = "MIT"
+url = "http://www.stackedboxes.org/Projects/Diluculum/"
+maintainer = "Peter Kapec"
+
+source = "http://www.stackedboxes.org/Projects/Diluculum/Releases/Diluculum-0.5.tar.gz"
+
+depends = {
+	"lua ~> 5.1",
+	"libboost >= 1.39"
+}

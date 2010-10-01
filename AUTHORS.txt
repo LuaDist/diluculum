@@ -1,0 +1,21 @@
+
+Diluculum was designed, implemented and is maintained by Leandro Motta
+Barros <lmb _at_ stackedboxes _dot_ org>.
+
+ List of Contributors
+~~~~~~~~~~~~~~~~~~~~~~
+Hakki Dogusan <dogusanh _at_ tr _dot_ net> contributed the Code Blocks
+project file. (No longer distributed with Diluculum, since the build
+system changed to CMake.)
+
+Jason Gauci <jgmath2000 _at_ gmail _dot_ com> contributed the
+implemention of 'LuaValue::asObjectPtr()' and the original
+implementation of the Boost-less version of 'LuaValue'.
+
+Yuriy Shmal <yuriy _at_ ellat _dot_ lv> reported that trying to access
+"_G" from a Lua state resulted in a crash. This lead to the addition
+of LuaState::globals().
+
+Christof Warlich <christof _dot_ warlich _at_ thermofisher _dot_ com>
+noticed that strings with embedded zeros comming from Lua were not
+properly handled by Diluculum, and provided the solution for this bug.

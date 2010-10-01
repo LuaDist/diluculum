@@ -1,0 +1,205 @@
+Version 0.5.2 (02010-05-28)
+~~~~~~~~~~~~~
+
+Another minor release, which fixes a single bug: strings comming from
+Lua with embedded zeroes were not properly handled. Thanks to Christof
+Warlich for reporting the bug and shortly after finding its cause and
+describing how to fix it.
+
+
+Version 0.5.1 (02010-01-15)
+~~~~~~~~~~~~~
+
+This is a minor release, which just adds LuaState::globals(). This
+kind of solves a problem reported by Yuriy Shmal, who noticed that
+trying to access "_G" from a LuaState resulted in a crash.
+
+
+Version 0.5 (02009-07-22)
+~~~~~~~~~~~
+
+Maybe the biggest change is the support to store functions in
+'LuaValue's. This allows some nice tricks like letting the Lua side
+register callbacks implemented in Lua, that will be eventually called
+by the C++ side (and this works even with anonymous functions).
+
+Additionally, Diluculum 0.5 sports the following contributions by
+Jason Gauci:
+
+ - Removed the dependency on Boost.Variant. Boost is still a
+   dependency, and, frankly, Boost.Variant is much more elegant than
+   the new implementation, but its removal will reduce the size of the
+   binaries considerably, specially in debug builds. (This is a big
+   change, too!)
+
+ - Added a 'LuaValue::asObjectPtr()' method, that provides handy
+   access in the C++ side to a pointer to objects instantiated in
+   Lua.
+
+ - Added a 'LuaValue::asInteger()' method.
+
+Jason sent those more than two years ago! It is a shame I am releasing
+them just now!
+
+Finally, the build system has been changed to CMake. I strongly
+recommend everyone to add Diluculum source files to their own
+projects, so this shouldn't be a big issue.
+
+Other than that, a couple of miscellaneous bugs have been fixed.
+
+
+Version 0.4 (02007-02-06)
+~~~~~~~~~~~
+
+This version added some changes to 'Diluculum/LuaWrappers.hpp' that
+are not backward compatible. But the necessary changes are small and I
+guess your compiler will tell you that something is wrong, instead of
+generating poisoned code. New in this release:
+
+ - When exporting class methods', it is no longer necessary to make
+   two macro calls for each exported method. ('DILUCULUM_WRAP_METHOD()'
+   is gone!)
+
+ - Diluculum now has easier support to create dynamically loadable Lua
+   modules, that is, those modules stored in a dynamic link library
+   that are loaded with a 'require()' call in Lua.
+
+
+Version 0.3.1 (02006-07-26)
+~~~~~~~~~~~~~
+
+Minor changes:
+
+ - Using a fully qualified 'Diluculum::TypeMismatchError' in the
+   definition of 'DILUCULUM_REGISTER_OBJECT()'. Yes, this was a bug...
+
+ - Added a Makefile for GCC/Linux and a Code Blocks project
+   (contributed by Hakki Dogusan).
+
+
+Version 0.3 (02006-07-03)
+~~~~~~~~~~~
+
+The first public release. At last! Most important changes since last
+version:
+
+ - Replaced the old function wrapping facilities with something
+   better.
+
+ - Added class wrapping facilities.
+
+ - Made the whole thing actually releasable to everyone, adding things
+   like an 'install' target to 'SConstruct', documentation, license...
+
+
+Version 0.2.2 (02006-04-05)
+~~~~~~~~~~~~~
+
+A minor update. Most important changes are:
+
+ - Added some 'const's here and there.
+
+ - Changed 'LuaValue::asUserData()' so that it returns a reference
+   (This allows to change the data returned by 'asData()').
+
+ - Added a 'LuaState' constructor that takes a 'lua_State*' as
+   parameter. It is used by the 'LuaState', but not owned by it (in
+   other words, it will not be closed when the 'LuaState' is
+   destroyed). This is handy for cases in which a 'lua_State*' is
+   already hanging around.
+
+The public release? Well... perhaps I'll just say "support for
+userdata is work-in-progress and likely to change" and release
+Diluculum as is. But this will depend on another project I'm starting
+now and that will probably use Diluculum.
+
+
+Version 0.2.1 (02006-01-18)
+~~~~~~~~~~~~~
+
+The first not-private (but still not public) release. That is, it is
+released only for internal use at the lab. News in this release:
+
+ - Updated to Lua 5.1.
+
+ - Removed dependency on Boost File System.
+
+ - Added not-very-well-thought support for (full) userdata.
+
+ - Added an ad-hoc 'Install.sh' script that can be used to install
+   Diluculum in GoboLinux. This is mostly for testing purposes before
+   I write a real 'install' target for the 'SConstruct'.
+
+I expect to do a really public release as soon as I can create a C++
+object (in the C++-side), register it in Lua, and call its methods
+from the Lua-side.
+
+
+Version 0.2 (02005-12-30)
+~~~~~~~~~~~
+
+Still not a public release (actually, I'm offline now, so this is out
+of question). Biggest news:
+
+ - A not-that-bad way to register C++ functions in a
+   'LuaState'. Actually, calling C++ from Lua and Lua from C++ is
+   quite acceptable now.
+
+ - The 'SConstruct' was rewritten. Now, Diliculum compiles to a real
+   library, and the directory structure looks much better that before.
+
+ - No known bugs introduced. Since no known bugs were known before,
+   this means that Diluculum is bug-free, AFAIK.
+
+ - The only TODO persisting is a more philosophical design question
+   than anything else. I'll leave the code as is until I have some
+   subsidy to decide what's the best way to deal with this specific
+   aspect.
+
+I think that this version is already public releaseable. Anyway, there
+are two things that would make good additions for a next version:
+
+ - A way to deal with userdata. As with support for C++ functions in
+   Lua, a perfect solution is not really necessary, but some support
+   for it can be nice.
+
+ - A 'install' target for the 'SConstruct'. I didn't bother yet to
+   look how to do this, or if there is a standard way to do this.
+
+
+Version 0.1 (02005-10-02)
+~~~~~~~~~~~
+
+Not yet a public release, but the first "quite usable"
+release. Some positive remarks:
+
+ - A 'LuaState' class nicely encapsulating the Lua state.
+
+ - A 'LuaValue' class that approximates in C++ most valid Lua values.
+
+ - A 'LuaVariable' class that provides easy read/write access to
+   variables stored in a Lua state.
+
+ - Quite complete unit tests.
+
+ - Pretty well documented.
+
+ - No known bugs.
+
+ - Just four TODOs. Three are related to possible performance
+   improvements. The other one concerns some code duplication. So,
+   there are no really big issues.
+
+ - As a bonus, there are two "pure Lua" packages: one with console
+   tricks (changing font color, positioning the cursor and so on) and
+   a command-line options parser.
+
+But some things are still missing, most notably:
+
+ - Testing with other compilers/platforms (other than GCC under Linux).
+
+ - Improving the 'SConstruct' and directory structure so that it looks
+   like a real library, not a bunch of files.
+
+ - And the big thing: a good (but not necessarily excellent) way to
+   call C++ from Lua.
