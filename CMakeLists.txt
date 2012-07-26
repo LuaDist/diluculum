@@ -1,78 +1,70 @@
-# Copyright (C) 2007-2009 LuaDist.
-# Modified by Peter Kapec
+# Copyright (C) 2007-2012 LuaDist.
+# Modified by Peter Kapec, Peter Drahoš
 # Redistribution and use of this file is allowed according to the terms of the MIT license.
 # For details see the COPYRIGHT file distributed with LuaDist.
 # Please note that the package source code is licensed under its own license.
 # Original build script by Leandro Motta Barros.
 
-	PROJECT(diluculum)
-	CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
-	INCLUDE(dist.cmake)
+project ( diluculum CXX )
+cmake_minimum_required ( VERSION 2.8 )
+include ( cmake/dist.cmake )
+include ( lua )
 
 # Find Lua
-	fIND_PACKAGE(Lua51 REQUIRED)
+find_package ( Lua REQUIRED )
 
 # Find Boost
-	SET(Boost_USE_STATIC_LIBS OFF)
-	FIND_PACKAGE(Boost 1.38 COMPONENTS unit_test_framework REQUIRED)
+#set ( Boost_USE_STATIC_LIBS OFF)
+#find_package ( Boost 1.38 COMPONENTS unit_test_framework REQUIRED )
 
-	ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK)
+add_definitions ( -DBOOST_ALL_DYN_LINK )
 
 # Include directories
-	INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS} ${LUA_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/include)
-
-# Link directories
-	LINK_DIRECTORIES(${BOOST_LIBRARY_DIRS})
-
+include_directories ( ${Boost_INCLUDE_DIRS} ${LUA_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/include )
 
 # Build the library
-	set(DiluculumSources
-		Sources/InternalUtils.cpp
-		Sources/LuaExceptions.cpp
-		Sources/LuaFunction.cpp
-		Sources/LuaState.cpp
-		Sources/LuaUserData.cpp
-		Sources/LuaUtils.cpp
-		Sources/LuaValue.cpp
-		Sources/LuaVariable.cpp
-		Sources/LuaWrappers.cpp
-	)
+set ( DiluculumSources Sources/InternalUtils.cpp Sources/LuaExceptions.cpp Sources/LuaFunction.cpp 
+  Sources/LuaState.cpp Sources/LuaUserData.cpp Sources/LuaUtils.cpp Sources/LuaValue.cpp 
+  Sources/LuaVariable.cpp Sources/LuaWrappers.cpp )
 
-	ADD_LIBRARY(diluculum SHARED ${DiluculumSources})
-	TARGET_LINK_LIBRARIES(diluculum ${LUA_LIBRARIES})
+add_library ( diluculum ${DiluculumSources} )
+target_link_libraries ( diluculum ${LUA_LIBRARIES} )
 
 # Add CTest support
-	ENABLE_TESTING()
+enable_testing ( )
 
 # Unit tests
-	FUNCTION(AddUnitTest name)
-		ADD_EXECUTABLE(${name} Tests/${name}.cpp)
-		TARGET_LINK_LIBRARIES(${name} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} ${LUA_LIBRARIES} diluculum)
-		ADD_TEST(${name} ${name})
-	ENDFUNCTION(AddUnitTest)
+function ( AddUnitTest name )
+  add_executable ( ${name} Tests/${name}.cpp )
+  target_link_libraries ( ${name} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} ${LUA_LIBRARIES} 
+    diluculum )
+  add_test ( ${name} ${name} )
+endfunction ( AddUnitTest )
 
-	ADD_LIBRARY(ATestModule SHARED Tests/ATestModule.cpp)
-	TARGET_LINK_LIBRARIES(ATestModule diluculum ${LUA_LIBRARIES})
-	SET_TARGET_PROPERTIES(ATestModule PROPERTIES PREFIX "")
+add_library ( ATestModule SHARED Tests/ATestModule.cpp )
+target_link_libraries ( ATestModule diluculum ${LUA_LIBRARIES} )
+set_target_properties ( ATestModule PROPERTIES PREFIX "" )
 
-	AddUnitTest(TestLuaFunction)
-	AddUnitTest(TestLuaState)
-	AddUnitTest(TestLuaUserData)
-	AddUnitTest(TestLuaUtils)
-	AddUnitTest(TestLuaValue)
-	AddUnitTest(TestLuaVariable)
-	AddUnitTest(TestLuaWrappers)
+addunittest ( TestLuaFunction )
+addunittest ( TestLuaState )
+addunittest ( TestLuaUserData )
+addunittest ( TestLuaUtils )
+addunittest ( TestLuaValue )
+addunittest ( TestLuaVariable )
+addunittest ( TestLuaWrappers )
 
 # Copy the files needed by the unit tests
-	CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/Tests/ReturnThread.lua ${CMAKE_BINARY_DIR}/ReturnThread.lua COPYONLY)
-	CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/Tests/SyntaxError.lua ${CMAKE_BINARY_DIR}/SyntaxError.lua COPYONLY)
-	CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/Tests/TestLuaStateDoFile.lua ${CMAKE_BINARY_DIR}/TestLuaStateDoFile.lua COPYONLY)
-	CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/Tests/TestLuaStateDoFileNoReturn.lua ${CMAKE_BINARY_DIR}/TestLuaStateDoFileNoReturn.lua  COPYONLY)
+configure_file ( ${CMAKE_SOURCE_DIR}/Tests/ReturnThread.lua ${CMAKE_BINARY_DIR}/ReturnThread.lua 
+  COPYONLY )
+configure_file ( ${CMAKE_SOURCE_DIR}/Tests/SyntaxError.lua ${CMAKE_BINARY_DIR}/SyntaxError.lua 
+  COPYONLY )
+configure_file ( ${CMAKE_SOURCE_DIR}/Tests/TestLuaStateDoFile.lua ${CMAKE_BINARY_DIR}/TestLuaStateDoFile.lua 
+  COPYONLY )
+configure_file ( ${CMAKE_SOURCE_DIR}/Tests/TestLuaStateDoFileNoReturn.lua ${CMAKE_BINARY_DIR}/TestLuaStateDoFileNoReturn.lua 
+  COPYONLY )
 
 # Install
-	INSTALL(TARGETS diluculum RUNTIME DESTINATION ${INSTALL_BIN} LIBRARY DESTINATION ${INSTALL_LIB} ARCHIVE DESTINATION ${INSTALL_LIB})	
-	INSTALL(DIRECTORY include/ DESTINATION ${INSTALL_INC})
-	INSTALL(FILES AUTHORS.txt COPYING.txt HISTORY.txt README.txt DESTINATION ${INSTALL_DOC})
-	
-
-
+install_library ( diluculum )
+install_header ( include/ )
+install_data ( AUTHORS.txt COPYING.txt HISTORY.txt README.txt )
+install_test ( Tests/ )

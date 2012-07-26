@@ -13,5 +13,5 @@ source = "http://www.stackedboxes.org/Projects/Diluculum/Releases/Diluculum-0.5.
 
 depends = {
 	"lua ~> 5.1",
-	"libboost >= 1.39"
+	"libboost >= 1.39" -- only headers are required
 }
