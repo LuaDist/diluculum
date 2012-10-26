@@ -1,3 +1,34 @@
+Version 0.5.5 (02011-10-02)
+~~~~~~~~~~~~~
+
+A bugfix release. In particular fixes a bug that shows up when a class
+is registered in lots of 'LuaState's. (Bug reported by James Doherty.)
+
+(Note: there was no 0.5.4 release. I created a 0.5.4 tag, but its
+contents were wrong, so I just skipped this version number in
+"official releases".)
+
+
+Version 0.5.3 (02010-07-22)
+~~~~~~~~~~~~~
+
+Two small changes in this release:
+
+- Strings with embedded zeros going from C++ to Lua are properly
+  handled (this is the inverse case as the one in the previous
+  release).
+
+- A LuaFunction can now be constructed from a chunk of Lua source
+  code. A LuaFunction can also now be "default constructed" (by
+  default, it is constructed from an empty chunk, so it returns
+  nothing).
+
+Thanks again to Christof Warlich for reporting both of these points
+and suggesting fixes for them. (But in case of any problem with the
+second point, I (Leandro Motta Barros) am the one to blame, since I
+went through a different path than the one he suggested).
+
+
 Version 0.5.2 (02010-05-28)
 ~~~~~~~~~~~~~
 

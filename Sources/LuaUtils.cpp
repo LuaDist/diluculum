@@ -3,7 +3,7 @@
 * Some utilities related to Lua.                                               *
 *                                                                              *
 *                                                                              *
-* Copyright (C) 2005-2010 by Leandro Motta Barros.                             *
+* Copyright (C) 2005-2011 by Leandro Motta Barros.                             *
 *                                                                              *
 * Permission is hereby granted, free of charge, to any person obtaining a copy *
 * of this software and associated documentation files (the "Software"), to     *
@@ -126,8 +126,11 @@ namespace Diluculum
             break;
 
          case LUA_TSTRING:
-            lua_pushstring (state, value.asString().c_str());
+         {
+            const std::string& tmp = value.asString();
+            lua_pushlstring (state, tmp.c_str(), tmp.length());
             break;
+         }
 
          case LUA_TBOOLEAN:
             lua_pushboolean (state, value.asBoolean());

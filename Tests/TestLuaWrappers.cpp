@@ -3,7 +3,7 @@
 * Unit tests for things declared in 'LuaWrappers.hpp'.                         *
 *                                                                              *
 *                                                                              *
-* Copyright (C) 2005-2010 by Leandro Motta Barros.                             *
+* Copyright (C) 2005-2011 by Leandro Motta Barros.                             *
 *                                                                              *
 * Permission is hereby granted, free of charge, to any person obtaining a copy *
 * of this software and associated documentation files (the "Software"), to     *
@@ -442,3 +442,70 @@ BOOST_AUTO_TEST_CASE(TestDynamicModule)
    BOOST_CHECK (ret[0] == true);
    BOOST_CHECK (ret[1] == "Ahey!");
 }
+
+
+// - TestMultipleStates --------------------------------------------------------
+BOOST_AUTO_TEST_CASE(TestMultipleStates)
+{
+   // This test case was created in response to a bug report by James
+   // Doherty. This code used to cause a crash. (In fact, simply "calling"
+   // DILUCULUM_REGISTER_CLASS() in the loop was enough to cause a crash.)
+
+   using namespace Diluculum;
+
+   for (int i = 0; i < 100; ++i)
+   {
+      LuaState ls;
+      DILUCULUM_REGISTER_CLASS (ls["Account"], Account);
+
+      LuaValueList params;
+      Account aCppAccount(params);
+      DILUCULUM_REGISTER_OBJECT (ls["a1"], Account, aCppAccount);
+      ls.doString ("a1:deposit (11.11)");
+
+      LuaValueList ret = ls.doString ("return a1:balance()");
+      BOOST_REQUIRE (ret.size() == 1);
+      BOOST_REQUIRE (ret[0].type() == LUA_TNUMBER);
+      BOOST_CHECK (ret[0] == 11.11);
+   }
+}
+
+
+#if 0
+
+//
+// The test case below is disabled because it will not pass. In fact, I am still
+// in doubt if I'd call this a bug or a limitation. I'd like to support this
+// syntax, but supporting it would complicate the things a bit (as far as I can
+// see, at least). Given that there is a reasonable workaround (simply use
+// doString()), I don't think I'll make this work anytime soon.
+//
+// For the record, the problem is that LuaUserData doesn't contain information
+// about metatables. So, the call marked with "this fails here!" below fails
+// with "attempt to index local 'a' (a userdata value)".
+//
+
+// - TestLuaFunctionWithCppObjectParam -----------------------------------------
+BOOST_AUTO_TEST_CASE(TestLuaFunctionWithCppObjectParam)
+{
+   // This test case was created in response to a bug report by Val Razgonyaev.
+
+   using namespace Diluculum;
+   LuaState ls;
+
+   DILUCULUM_REGISTER_CLASS (ls["Account"], Account);
+
+   LuaValueList params;
+   params.push_back (50.0);
+   Account aCppAccount (params);
+   DILUCULUM_REGISTER_OBJECT (ls["TheAccount"], Account, aCppAccount);
+
+   ls.doString(
+      "function Func(a) return a:balance() * 2 end");
+
+   LuaValueList ret = ls["Func"](ls["TheAccount"].value()); // this fails here!
+   BOOST_REQUIRE_EQUAL (ret.size(), 1);
+   BOOST_CHECK_EQUAL (ret[0].asNumber(), 100.0);
+}
+
+#endif // #if 0

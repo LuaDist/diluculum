@@ -3,7 +3,7 @@
 * A C++ equivalent of a Lua function.                                          *
 *                                                                              *
 *                                                                              *
-* Copyright (C) 2005-2010 by Leandro Motta Barros.                             *
+* Copyright (C) 2005-2011 by Leandro Motta Barros.                             *
 *                                                                              *
 * Permission is hereby granted, free of charge, to any person obtaining a copy *
 * of this software and associated documentation files (the "Software"), to     *
@@ -31,8 +31,15 @@
 namespace Diluculum
 {
    // - LuaFunction::LuaFunction -----------------------------------------------
+   LuaFunction::LuaFunction (const std::string& luaChunk)
+      : functionType_(LUA_LUA_FUNCTION), size_(luaChunk.size()),
+        data_(new char[size_])
+   {
+      memcpy(data_.get(), luaChunk.c_str(), size_);
+   }
+
    LuaFunction::LuaFunction (const void* data, size_t size)
-      : functionType_(LUA_LUA_FUNCTION), size_(size), data_ (new char[size_])
+      : functionType_(LUA_LUA_FUNCTION), size_(size), data_(new char[size_])
    {
       memcpy(data_.get(), data, size);
    }

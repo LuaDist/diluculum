@@ -3,7 +3,7 @@
 * Unit tests for things declared in 'LuaFunction.hpp'.                         *
 *                                                                              *
 *                                                                              *
-* Copyright (C) 2005-2010 by Leandro Motta Barros.                             *
+* Copyright (C) 2005-2011 by Leandro Motta Barros.                             *
 *                                                                              *
 * Permission is hereby granted, free of charge, to any person obtaining a copy *
 * of this software and associated documentation files (the "Software"), to     *
@@ -235,4 +235,41 @@ BOOST_AUTO_TEST_CASE(TestLuaFunctionCopies)
                               strlen(pseudoBytecode1)),
                       0);
    BOOST_REQUIRE (lf5 == lf4);
+}
+
+
+
+// - TestLuaFunctionFromLuaCode ------------------------------------------------
+BOOST_AUTO_TEST_CASE(TestLuaFunctionFromLuaCode)
+{
+   using namespace Diluculum;
+
+   LuaState ls;
+
+   // First, go with the default: a Lua function returning nil
+   LuaFunction f1;
+   LuaValueList params1;
+   LuaValueList ret1 = ls.call (f1, params1);
+   BOOST_CHECK_EQUAL(ret1.size(), 0);
+
+   // Now, try providing a chunk as Lua source code
+   LuaFunction f2("local p = {...}; return p[1]*2");
+   LuaValueList params2;
+   params2.push_back(122);
+   LuaValueList ret2 = ls.call (f2, params2);
+
+   BOOST_REQUIRE_EQUAL(ret2.size(), 1);
+   BOOST_CHECK_EQUAL(ret2[0].asNumber(), 244);
+
+   // Also try a chunk returning multiple values
+   LuaFunction f3("local p = {...}; return p[1]*3, 'also a return value'");
+   LuaValueList params3;
+   params3.push_back(-11);
+   LuaValueList ret3 = ls.call (f3, params3);
+
+   BOOST_REQUIRE_EQUAL(ret3.size(), 2);
+   BOOST_CHECK_EQUAL(ret3[0].asNumber(), -33);
+   BOOST_CHECK_EQUAL(ret3[1].asString(), "also a return value");
+
+
 }

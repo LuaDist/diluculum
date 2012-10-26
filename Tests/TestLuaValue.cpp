@@ -3,7 +3,7 @@
 * Unit tests for things declared in 'LuaValue.hpp'.                            *
 *                                                                              *
 *                                                                              *
-* Copyright (C) 2005-2010 by Leandro Motta Barros.                             *
+* Copyright (C) 2005-2011 by Leandro Motta Barros.                             *
 *                                                                              *
 * Permission is hereby granted, free of charge, to any person obtaining a copy *
 * of this software and associated documentation files (the "Software"), to     *
@@ -785,18 +785,40 @@ BOOST_AUTO_TEST_CASE(TestLuaValueWithStringWithEmbeddedNull)
    // also pinpointed the bug and shown the solution).
    using namespace Diluculum;
 
-   LuaState state;
-   state.doString ("stringWithNull = 'ab\\0cd'");
+   {
+      // First part: Lua string with embedded zeros coming to C++
+      LuaState state;
+      state.doString ("stringWithNull = 'ab\\0cd'");
 
-   LuaValue stringWithNull = state["stringWithNull"].value();
-   BOOST_REQUIRE_EQUAL (stringWithNull.type(), LUA_TSTRING);
+      LuaValue stringWithNull = state["stringWithNull"].value();
+      BOOST_REQUIRE_EQUAL (stringWithNull.type(), LUA_TSTRING);
 
-   std::string s = stringWithNull.asString();
+      std::string s = stringWithNull.asString();
 
-   BOOST_REQUIRE_EQUAL (s.size(), 5);
-   BOOST_CHECK_EQUAL (s[0], 'a');
-   BOOST_CHECK_EQUAL (s[1], 'b');
-   BOOST_CHECK_EQUAL (s[2], 0);
-   BOOST_CHECK_EQUAL (s[3], 'c');
-   BOOST_CHECK_EQUAL (s[4], 'd');
+      BOOST_REQUIRE_EQUAL (s.size(), 5);
+      BOOST_CHECK_EQUAL (s[0], 'a');
+      BOOST_CHECK_EQUAL (s[1], 'b');
+      BOOST_CHECK_EQUAL (s[2], 0);
+      BOOST_CHECK_EQUAL (s[3], 'c');
+      BOOST_CHECK_EQUAL (s[4], 'd');
+   }
+
+   {
+      // Second part: C++ string with embedded zeros going to Lua
+      LuaState state;
+      LuaValue stringWithNull (std::string ("ab\0cd", 5));
+      state["stringWithNull"] = stringWithNull;
+
+      const int size = state.doString ("return #stringWithNull")[0].asInteger();
+      BOOST_REQUIRE_EQUAL (size, 5);
+
+      const std::string stringBack =
+         state.doString ("return stringWithNull")[0].asString();
+      BOOST_REQUIRE_EQUAL (stringBack.length(), 5);
+      BOOST_CHECK_EQUAL (stringBack[0], 'a');
+      BOOST_CHECK_EQUAL (stringBack[1], 'b');
+      BOOST_CHECK_EQUAL (stringBack[2], '\0');
+      BOOST_CHECK_EQUAL (stringBack[3], 'c');
+      BOOST_CHECK_EQUAL (stringBack[4], 'd');
+   }
 }

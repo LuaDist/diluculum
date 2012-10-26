@@ -40,7 +40,7 @@ Quick facts about Diluculum:
 - It is distributed under the MIT license (the same as Lua).
 - Its homepage is located at
   <A href="http://www.stackedboxes.org/Projects/Diluculum">
-  http://www.stackedboxes.org/Projects/Diluculum</A>.
+  http://www.stackedboxes.org/~lmb/diluculum</A>.
 - It is developed by Leandro Motta Barros, who can be contacted at
   \verbatim
      lmb@sta
