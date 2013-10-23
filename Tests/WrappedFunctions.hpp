@@ -51,7 +51,7 @@ namespace
       return LuaValueList();
    }
 
-   DILUCULUM_WRAP_FUNCTION (ZeroTheGlobal);
+   DILUCULUM_WRAP_FUNCTION (ZeroTheGlobal)
 
 
 
@@ -75,7 +75,7 @@ namespace
       return LuaValueList();
    }
 
-   DILUCULUM_WRAP_FUNCTION (SetTheGlobal);
+   DILUCULUM_WRAP_FUNCTION (SetTheGlobal)
 
 
 
@@ -101,7 +101,7 @@ namespace
       return LuaValueList();
    }
 
-   DILUCULUM_WRAP_FUNCTION (SetTheGlobalToSum);
+   DILUCULUM_WRAP_FUNCTION (SetTheGlobalToSum)
 
 
 
@@ -132,7 +132,7 @@ namespace
       return ret;
    }
 
-   DILUCULUM_WRAP_FUNCTION (ConcatenateThree);
+   DILUCULUM_WRAP_FUNCTION (ConcatenateThree)
 
 
    /** Returns the first elements of the Fibonacci sequence. This takes one
@@ -172,7 +172,7 @@ namespace
       return ret;
    }
 
-   DILUCULUM_WRAP_FUNCTION (FibonacciSequence);
+   DILUCULUM_WRAP_FUNCTION (FibonacciSequence)
 
 
 
@@ -223,7 +223,7 @@ namespace
       return ret;
    }
 
-   DILUCULUM_WRAP_FUNCTION (ToOrFromString);
+   DILUCULUM_WRAP_FUNCTION (ToOrFromString)
 
 
 } // (anonymous) namespace

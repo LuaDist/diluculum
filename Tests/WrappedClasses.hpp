@@ -78,11 +78,11 @@ namespace
          double balance_;
    };
 
-   DILUCULUM_BEGIN_CLASS (Account);
-      DILUCULUM_CLASS_METHOD (Account, deposit);
-      DILUCULUM_CLASS_METHOD (Account, withdraw);
-      DILUCULUM_CLASS_METHOD (Account, balance);
-   DILUCULUM_END_CLASS (Account);
+   DILUCULUM_BEGIN_CLASS (Account)
+      DILUCULUM_CLASS_METHOD (Account, deposit)
+      DILUCULUM_CLASS_METHOD (Account, withdraw)
+      DILUCULUM_CLASS_METHOD (Account, balance)
+   DILUCULUM_END_CLASS (Account)
 
 
    /// A quite ridiculous class, but OK for testing...
@@ -119,11 +119,11 @@ namespace
          unsigned number_;
    };
 
-   DILUCULUM_BEGIN_CLASS (NumberProperties);
-      DILUCULUM_CLASS_METHOD (NumberProperties, isEven);
-      DILUCULUM_CLASS_METHOD (NumberProperties, isOdd);
-      DILUCULUM_CLASS_METHOD (NumberProperties, isBig);
-   DILUCULUM_END_CLASS (NumberProperties);
+   DILUCULUM_BEGIN_CLASS (NumberProperties)
+      DILUCULUM_CLASS_METHOD (NumberProperties, isEven)
+      DILUCULUM_CLASS_METHOD (NumberProperties, isOdd)
+      DILUCULUM_CLASS_METHOD (NumberProperties, isBig)
+   DILUCULUM_END_CLASS (NumberProperties)
 
 
 
@@ -147,8 +147,8 @@ namespace
 
    bool DestructorTester::aFlag = false;
 
-   DILUCULUM_BEGIN_CLASS (DestructorTester);
-   DILUCULUM_END_CLASS (DestructorTester);
+   DILUCULUM_BEGIN_CLASS (DestructorTester)
+   DILUCULUM_END_CLASS (DestructorTester)
 
 } // (anonymous) namespace
 

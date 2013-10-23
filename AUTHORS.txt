@@ -19,3 +19,6 @@ of LuaState::globals().
 Christof Warlich <christof _dot_ warlich _at_ thermofisher _dot_ com>
 noticed that strings with embedded zeros comming from Lua were not
 properly handled by Diluculum, and provided the solution for this bug.
+
+Eugenio Bargiacchi <svalorzen _at_ gmail _dot_ com> Fixed a memory
+corruption bug (and was the major author of the port to Lua 5.2).

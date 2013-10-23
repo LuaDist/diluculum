@@ -21,10 +21,26 @@ add_definitions ( -DBOOST_ALL_DYN_LINK )
 # Include directories
 include_directories ( ${Boost_INCLUDE_DIRS} ${LUA_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/include )
 
+# Link directories
+link_directories(${Boost_LIBRARY_DIRS})
+
+
+# Enable warnings when compiling with G++
+if(CMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
+endif(CMAKE_COMPILER_IS_GNUCXX)
+
 # Build the library
-set ( DiluculumSources Sources/InternalUtils.cpp Sources/LuaExceptions.cpp Sources/LuaFunction.cpp
-  Sources/LuaState.cpp Sources/LuaUserData.cpp Sources/LuaUtils.cpp Sources/LuaValue.cpp
-  Sources/LuaVariable.cpp Sources/LuaWrappers.cpp )
+set(DiluculumSources
+    Sources/InternalUtils.cpp
+    Sources/LuaExceptions.cpp
+    Sources/LuaFunction.cpp
+    Sources/LuaState.cpp
+    Sources/LuaUserData.cpp
+    Sources/LuaUtils.cpp
+    Sources/LuaValue.cpp
+    Sources/LuaVariable.cpp
+    Sources/LuaWrappers.cpp)
 
 add_library ( diluculum ${DiluculumSources} )
 target_link_libraries ( diluculum ${LUA_LIBRARIES} )
@@ -32,11 +48,13 @@ target_link_libraries ( diluculum ${LUA_LIBRARIES} )
 # Add CTest support
 enable_testing ( )
 
-# Unit tests
-function ( AddUnitTest name )
+# Now, the unit tests
+function(AddUnitTest name)
   add_executable ( ${name} Tests/${name}.cpp )
-  target_link_libraries ( ${name} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} ${LUA_LIBRARIES}
-    diluculum )
+  target_link_libraries(${name} 
+						${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} 
+						${LUA_LIBRARIES}
+					    diluculum )
   add_test ( ${name} ${name} )
   install ( TARGETS ${name} RUNTIME DESTINATION ${INSTALL_TEST}/${_ARG_INTO}
               COMPONENT Test )
