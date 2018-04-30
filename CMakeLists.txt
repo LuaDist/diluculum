@@ -18,7 +18,7 @@ endif()
 find_package ( Lua REQUIRED )
 
 # Find Boost
-set ( Booqst_USE_STATIC_LIBS OFF)
+set ( Boost_USE_STATIC_LIBS OFF)
 find_package ( Boost 1.39 COMPONENTS unit_test_framework REQUIRED )
 add_definitions ( -DBOOST_ALL_DYN_LINK )
 
