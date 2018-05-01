@@ -10,11 +10,15 @@ cmake_minimum_required ( VERSION 2.8 )
 include ( cmake/dist.cmake )
 include ( lua )
 
+if( MSVC ) 
+	set( CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE )
+endif()
+
 # Find Lua
 find_package ( Lua REQUIRED )
 
 # Find Boost
-set ( Booqst_USE_STATIC_LIBS OFF)
+set ( Boost_USE_STATIC_LIBS OFF)
 find_package ( Boost 1.39 COMPONENTS unit_test_framework REQUIRED )
 add_definitions ( -DBOOST_ALL_DYN_LINK )
 
@@ -42,7 +46,7 @@ set(DiluculumSources
     Sources/LuaVariable.cpp
     Sources/LuaWrappers.cpp)
 
-add_library ( diluculum ${DiluculumSources} )
+add_library ( diluculum SHARED ${DiluculumSources} )
 target_link_libraries ( diluculum ${LUA_LIBRARIES} )
 
 # Add CTest support
@@ -56,14 +60,17 @@ function(AddUnitTest name)
 						${LUA_LIBRARIES}
 					    diluculum )
   add_test ( ${name} ${name} )
-  install ( TARGETS ${name} RUNTIME DESTINATION ${INSTALL_TEST}/${_ARG_INTO}
+  install ( TARGETS ${name} RUNTIME DESTINATION ${INSTALL_TEST}/
               COMPONENT Test )
 endfunction ( AddUnitTest )
 
 add_library ( ATestModule SHARED Tests/ATestModule.cpp )
 target_link_libraries ( ATestModule diluculum ${LUA_LIBRARIES} )
 set_target_properties ( ATestModule PROPERTIES PREFIX "" )
-install ( TARGETS ATestModule LIBRARY DESTINATION ${INSTALL_TEST}/${_ARG_INTO} COMPONENT Test )
+install ( TARGETS ATestModule
+		  RUNTIME DESTINATION ${INSTALL_TEST} COMPONENT Runtime
+		  LIBRARY DESTINATION ${INSTALL_TEST} COMPONENT Runtime
+		  ARCHIVE DESTINATION ${INSTALL_TEST} COMPONENT Library )
 
 addunittest ( TestLuaFunction )
 addunittest ( TestLuaState )
